@@ -1,0 +1,78 @@
+<template name="homepageCategories">
+    <section id="categories">
+        <div class="homepage-align mt-3">
+            <h1 id="homepage-products-heading">Categories</h1>
+            <div class="row mt-4">
+                <!-- A category -->
+                <div class="col-md-4">
+                    <div class="category-div">
+                        <div class="custom-overlay"></div>
+                        <div class="custom-overlay-top">
+                            <span>Fashion</span>
+                        </div>
+                        <img src="/resources/images/homepage/fashion.jpg">
+                    </div>
+                </div>
+                <!-- A category -->
+                <div class="col-md-4">
+                    <div class="category-div">
+                        <div class="custom-overlay"></div>
+                        <div class="custom-overlay-top">
+                            <span>Phones and Tablets</span>
+                        </div>
+                        <img src="/resources/images/homepage/mobile.jpg">
+                    </div>
+                </div>
+                <!-- A category -->
+                <div class="col-md-4">
+                    <div class="category-div">
+                        <div class="custom-overlay"></div>
+                        <div class="custom-overlay-top">
+                            <span>Groceries</span>
+                        </div>
+                        <img src="/resources/images/homepage/groceries.jpg">
+                    </div>
+                </div>
+                <!-- A category -->
+                <div class="col-md-4">
+                    <div class="category-div">
+                        <div class="custom-overlay"></div>
+                        <div class="custom-overlay-top">
+                            <span>Computing</span>
+                        </div>
+                        <img src="/resources/images/homepage/computer.jpg">
+                    </div>
+                </div>
+                <!-- A category -->
+                <div class="col-md-4">
+                    <div class="category-div">
+                        <div class="custom-overlay"></div>
+                        <div class="custom-overlay-top">
+                            <span>Game and Consoles</span>
+                        </div>
+                        <img src="/resources/images/homepage/gaming.jpg">
+                    </div>
+                </div>
+                <!-- A category -->
+                <div class="col-md-4">
+                    <div class="category-div">
+                        <div class="custom-overlay"></div>
+                        <div class="custom-overlay-top">
+                            <span>Office Tools</span>
+                        </div>
+                        <img src="/resources/images/homepage/corporate.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        $(function(){
+            $('.category-div').mouseover(function(){
+                $(this).find('.custom-overlay').css('opacity', '0.5');
+            }).mouseout(function(){
+                $(this).find('.custom-overlay').css('opacity', '0.2');
+            });
+        });
+    </script>
+</template>
