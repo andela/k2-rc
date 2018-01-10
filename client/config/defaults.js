@@ -16,13 +16,7 @@ export const DEFAULT_WORKFLOW = "coreWorkflow";
 // Use this to override just the home Package
 // ie: {template: "products"}
 export const INDEX_OPTIONS = {
-  workflow: "coreProductGridWorkflow",
-  template: "homepage",
-  layoutHeader: "NavBar",
-  layoutFooter: "Footer",
-  notFound: "notFound",
-  dashboardControls: "dashboardControls",
-  adminControlsFooter: "adminControlsFooter"
+  workflow: "coreProductGridWorkflow"
 };
 
 // default load qty for product grid

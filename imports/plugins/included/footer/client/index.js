@@ -1,1 +1,0 @@
-import "./templates/footer.html";
