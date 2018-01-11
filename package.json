@@ -25,11 +25,7 @@
     "amplify-store": "^0.1.0",
     "autoprefixer": "^7.1.2",
     "autosize": "^4.0.0",
-<<<<<<< HEAD
     "babel-runtime": "^6.23.0",
-=======
-    "babel-runtime": "^6.26.0",
->>>>>>> feature(static-page-management): - add static-page-management features
     "bcrypt": "^1.0.3",
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
