@@ -11,8 +11,15 @@ const supportedCollections = ["products", "orders", "accounts"];
 function getProductFindTerm(searchTerm, searchTags, userId) {
   const shopId = Reaction.getShopId();
   const findTerm = {
-    shopId: shopId,
-    $text: { $search: searchTerm }
+    $and: [
+      { shopId: shopId },
+      {
+        title: {
+          $regex: searchTerm,
+          $options: "i"
+        }
+      }
+    ]
   };
   if (searchTags.length) {
     findTerm.hashtags = { $all: searchTags };
@@ -55,49 +62,72 @@ getResults.orders = function (searchTerm, facets, maxResults, userId) {
   const findTerm = {
     $and: [
       { shopId: shopId },
-      { $or: [
-        { _id: {
-          $regex: `^${regexSafeSearchTerm}`,
-          $options: "i"
-        } },
-        { userEmails: {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } },
-        { shippingName: {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } },
-        { billingName: {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } },
-        { billingCard: {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } },
-        { billingPhone: {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } },
-        { shippingPhone: {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } },
-        { "product.title": {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } },
-        { "variants.title": {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } },
-        { "variants.optionTitle": {
-          $regex: regexSafeSearchTerm,
-          $options: "i"
-        } }
-      ] }
-    ] };
+      {
+        $or: [
+          {
+            _id: {
+              $regex: `^${regexSafeSearchTerm}`,
+              $options: "i"
+            }
+          },
+          {
+            userEmails: {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          },
+          {
+            shippingName: {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          },
+          {
+            billingName: {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          },
+          {
+            billingCard: {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          },
+          {
+            billingPhone: {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          },
+          {
+            shippingPhone: {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          },
+          {
+            "product.title": {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          },
+          {
+            "variants.title": {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          },
+          {
+            "variants.optionTitle": {
+              $regex: regexSafeSearchTerm,
+              $options: "i"
+            }
+          }
+        ]
+      }
+    ]
+  };
   if (Reaction.hasPermission("orders", userId)) {
     orderResults = OrderSearch.find(findTerm, { limit: maxResults });
     Logger.debug(`Found ${orderResults.count()} orders searching for ${regexSafeSearchTerm}`);
@@ -113,25 +143,36 @@ getResults.accounts = function (searchTerm, facets, maxResults, userId) {
     const findTerm = {
       $and: [
         { shopId: shopId },
-        { $or: [
-          { emails: {
-            $regex: searchTerm,
-            $options: "i"
-          } },
-          { "profile.firstName": {
-            $regex: "^" + searchTerm + "$",
-            $options: "i"
-          } },
-          { "profile.lastName": {
-            $regex: "^" + searchTerm + "$",
-            $options: "i"
-          } },
-          { "profile.phone": {
-            $regex: "^" + searchPhone + "$",
-            $options: "i"
-          } }
-        ] }
-      ] };
+        {
+          $or: [
+            {
+              emails: {
+                $regex: searchTerm,
+                $options: "i"
+              }
+            },
+            {
+              "profile.firstName": {
+                $regex: "^" + searchTerm + "$",
+                $options: "i"
+              }
+            },
+            {
+              "profile.lastName": {
+                $regex: "^" + searchTerm + "$",
+                $options: "i"
+              }
+            },
+            {
+              "profile.phone": {
+                $regex: "^" + searchPhone + "$",
+                $options: "i"
+              }
+            }
+          ]
+        }
+      ]
+    };
     accountResults = AccountSearch.find(findTerm, {
       limit: maxResults
     });
@@ -148,7 +189,7 @@ Meteor.publish("SearchResults", function (collection, searchTerm, facets, maxRes
   check(searchTerm, Match.Optional(String));
   check(facets, Match.OneOf(Array, undefined));
   Logger.debug(`Returning search results on ${collection}. SearchTerm: |${searchTerm}|. Facets: |${facets}|.`);
-  if (!searchTerm) {
+  if (!searchTerm || (collection === "products" && searchTerm.length < 3)) {
     return this.ready();
   }
   return getResults[collection](searchTerm, facets, maxResults, this.userId);
