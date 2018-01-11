@@ -13,9 +13,6 @@
     "PAPERTRAIL_API_TOKEN": {
       "required": true
     },
-    "PORT": {
-      "required": true
-    },
     "ROOT_URL": {
       "required": true
     }
@@ -31,7 +28,7 @@
   ],
   "buildpacks": [
     {
-      "url": "https://github.com/AdmitHub/meteor-buildpack-horse.git"
+      "url": "https://github.com/swrdfish/meteor-buildpack-horse.git"
     }
   ]
 }
