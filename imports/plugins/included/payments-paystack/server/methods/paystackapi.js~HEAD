@@ -16,7 +16,6 @@ const ThirdPartyAPI = {
       const results = {
         success: true,
         id: Random.id(),
-        cardNumber: cardData.number.slice(-4),
         amount: paymentData.total,
         currency: "USD"
       };
@@ -64,16 +63,12 @@ const ThirdPartyAPI = {
 // This is the "wrapper" functions you should write in order to make your code more
 // testable. You can either mirror the API calls or normalize them to the authorize/capture/refund/refunds
 // that Reaction is expecting
-export const ExampleApi = {};
-ExampleApi.methods = {};
+export const PaystackApi = {};
+PaystackApi.methods = {};
 
 export const cardSchema = new SimpleSchema({
-  number: { type: String },
   name: { type: String },
-  cvv2: { type: String },
-  expireMonth: { type: String },
-  expireYear: { type: String },
-  type: { type: String }
+  email: { type: String }
 });
 
 registerSchema("cardSchema", cardSchema);
@@ -85,9 +80,8 @@ export const paymentDataSchema = new SimpleSchema({
 
 registerSchema("paymentDataSchema", paymentDataSchema);
 
-
-ExampleApi.methods.authorize = new ValidatedMethod({
-  name: "ExampleApi.methods.authorize",
+PaystackApi.methods.authorize = new ValidatedMethod({
+  name: "PaystackApi.methods.authorize",
   validate: new SimpleSchema({
     transactionType: { type: String },
     cardData: { type: cardSchema },
@@ -99,27 +93,25 @@ ExampleApi.methods.authorize = new ValidatedMethod({
   }
 });
 
-
-ExampleApi.methods.capture = new ValidatedMethod({
-  name: "ExampleApi.methods.capture",
+PaystackApi.methods.capture = new ValidatedMethod({
+  name: "PaystackApi.methods.capture",
   validate: new SimpleSchema({
     authorizationId: { type: String },
     amount: { type: Number, decimal: true }
   }).validator(),
   run(args) {
     const transactionId = args.authorizationId;
-    const amount = args.amount;
+    const { amount } = args;
     const results = ThirdPartyAPI.capture(transactionId, amount);
     return results;
   }
 });
 
-
-ExampleApi.methods.refund = new ValidatedMethod({
-  name: "ExampleApi.methods.refund",
+PaystackApi.methods.refund = new ValidatedMethod({
+  name: "PaystackApi.methods.refund",
   validate: new SimpleSchema({
     transactionId: { type: String },
-    amount: { type: Number, decimal: true  }
+    amount: { type: Number, decimal: true }
   }).validator(),
   run(args) {
     const transactionId = args.transactionId;
@@ -129,9 +121,8 @@ ExampleApi.methods.refund = new ValidatedMethod({
   }
 });
 
-
-ExampleApi.methods.refunds = new ValidatedMethod({
-  name: "ExampleApi.methods.refunds",
+PaystackApi.methods.refunds = new ValidatedMethod({
+  name: "PaystackApi.methods.refunds",
   validate: new SimpleSchema({
     transactionId: { type: String }
   }).validator(),

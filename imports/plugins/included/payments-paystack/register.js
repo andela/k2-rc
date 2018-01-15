@@ -3,13 +3,13 @@ import { Reaction } from "/server/api";
 
 Reaction.registerPackage({
   label: "PaystackPayment",
-  name: "paystack-paymentmethod",
+  name: "Paystack-paymentmethod",
   icon: "fa fa-credit-card-alt",
   autoEnable: true,
   settings: {
     "mode": false,
     "apiKey": "",
-    "example": {
+    "paystack": {
       enabled: false
     },
     "paystack-paymentmethod": {

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import dotenv from "dotenv";
 import { composeWithTracker } from "@reactioncommerce/reaction-components";
 import { Meteor } from "meteor/meteor";
 import { Packages } from "/lib/collections";
@@ -8,14 +7,12 @@ import { TranslationProvider } from "/imports/plugins/core/ui/client/providers";
 import { Reaction, i18next } from "/client/api";
 import { PaystackSettingsForm } from "../components";
 
-dotenv.config();
 class PaystackSettingsFormContainer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      secretKey: process.env.SECRET_KEY,
-      publicKey: process.env.PUBLIC_KEY
+      apiKey: "278302390293"
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -25,8 +22,7 @@ class PaystackSettingsFormContainer extends Component {
 
   handleChange(e) {
     e.preventDefault();
-    this.setState({ secretKey: e.target.value });
-    this.setState({ privateKey: e.target.value });
+    this.setState({ apiKey: e.target.value });
   }
 
   handleSubmit(settings) {
@@ -35,26 +31,19 @@ class PaystackSettingsFormContainer extends Component {
     const packageId = this.props.packageData._id;
     const settingsKey = this.props.packageData.registry[0].settingsKey;
 
-    const fields = [
-      {
-        property: "secretKey",
-        value: settings.secretKey
-      },
-      {
-        property: "publicKey",
-        value: settings.publicKey
-      },
-      {
-        property: "support",
-        value: settings.support
-      }
-    ];
+    const fields = [{
+      property: "apiKey",
+      value: settings.apiKey
+    }, {
+      property: "support",
+      value: settings.support
+    }];
 
     this.saveUpdate(fields, packageId, settingsKey);
   }
 
   saveUpdate(fields, id, settingsKey) {
-    Meteor.call("registry/update", id, settingsKey, fields, err => {
+    Meteor.call("registry/update", id, settingsKey, fields, (err) => {
       if (err) {
         return Alerts.toast(i18next.t("admin.settings.saveFailed"), "error");
       }
@@ -66,7 +55,11 @@ class PaystackSettingsFormContainer extends Component {
     const settingsKey = this.props.packageData.registry[0].settingsKey;
     return (
       <TranslationProvider>
-        <PaystackSettingsForm onChange={this.handleChange} onSubmit={this.handleSubmit} settings={this.props.packageData.settings[settingsKey]} />
+        <PaystackSettingsForm
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+          settings={this.props.packageData.settings[settingsKey]}
+        />
       </TranslationProvider>
     );
   }

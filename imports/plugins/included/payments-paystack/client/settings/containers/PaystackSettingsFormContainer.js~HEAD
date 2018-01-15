@@ -1,18 +1,21 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import dotenv from "dotenv";
 import { composeWithTracker } from "@reactioncommerce/reaction-components";
 import { Meteor } from "meteor/meteor";
 import { Packages } from "/lib/collections";
 import { TranslationProvider } from "/imports/plugins/core/ui/client/providers";
 import { Reaction, i18next } from "/client/api";
-import { ExampleSettingsForm } from "../components";
+import { PaystackSettingsForm } from "../components";
 
-class ExampleSettingsFormContainer extends Component {
+dotenv.config();
+class PaystackSettingsFormContainer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      apiKey: "278302390293"
+      secretKey: process.env.SECRET_KEY,
+      publicKey: process.env.PUBLIC_KEY
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -22,7 +25,8 @@ class ExampleSettingsFormContainer extends Component {
 
   handleChange(e) {
     e.preventDefault();
-    this.setState({ apiKey: e.target.value });
+    this.setState({ secretKey: e.target.value });
+    this.setState({ privateKey: e.target.value });
   }
 
   handleSubmit(settings) {
@@ -31,19 +35,26 @@ class ExampleSettingsFormContainer extends Component {
     const packageId = this.props.packageData._id;
     const settingsKey = this.props.packageData.registry[0].settingsKey;
 
-    const fields = [{
-      property: "apiKey",
-      value: settings.apiKey
-    }, {
-      property: "support",
-      value: settings.support
-    }];
+    const fields = [
+      {
+        property: "secretKey",
+        value: settings.secretKey
+      },
+      {
+        property: "publicKey",
+        value: settings.publicKey
+      },
+      {
+        property: "support",
+        value: settings.support
+      }
+    ];
 
     this.saveUpdate(fields, packageId, settingsKey);
   }
 
   saveUpdate(fields, id, settingsKey) {
-    Meteor.call("registry/update", id, settingsKey, fields, (err) => {
+    Meteor.call("registry/update", id, settingsKey, fields, err => {
       if (err) {
         return Alerts.toast(i18next.t("admin.settings.saveFailed"), "error");
       }
@@ -55,17 +66,13 @@ class ExampleSettingsFormContainer extends Component {
     const settingsKey = this.props.packageData.registry[0].settingsKey;
     return (
       <TranslationProvider>
-        <ExampleSettingsForm
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-          settings={this.props.packageData.settings[settingsKey]}
-        />
+        <PaystackSettingsForm onChange={this.handleChange} onSubmit={this.handleSubmit} settings={this.props.packageData.settings[settingsKey]} />
       </TranslationProvider>
     );
   }
 }
 
-ExampleSettingsFormContainer.propTypes = {
+PaystackSettingsFormContainer.propTypes = {
   packageData: PropTypes.object
 };
 
@@ -73,11 +80,11 @@ const composer = ({}, onData) => {
   const subscription = Meteor.subscribe("Packages", Reaction.getShopId());
   if (subscription.ready()) {
     const packageData = Packages.findOne({
-      name: "example-paymentmethod",
+      name: "paystack-paymentmethod",
       shopId: Reaction.getShopId()
     });
     onData(null, { packageData });
   }
 };
 
-export default composeWithTracker(composer)(ExampleSettingsFormContainer);
+export default composeWithTracker(composer)(PaystackSettingsFormContainer);

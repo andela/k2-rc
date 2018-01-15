@@ -14,6 +14,7 @@ const paymentMethod = {
   createdAt: new Date()
 };
 
+
 describe("PaystackApi", function () {
   let sandbox;
 
@@ -28,7 +29,11 @@ describe("PaystackApi", function () {
   it("should return data from ThirdPartyAPI authorize", function () {
     const cardData = {
       name: "Test User",
-      email: "test@gmail.com"
+      number: "4242424242424242",
+      expireMonth: "2",
+      expireYear: "2018",
+      cvv2: "123",
+      type: "visa"
     };
     const paymentData = {
       currency: "USD",
@@ -41,13 +46,17 @@ describe("PaystackApi", function () {
       cardData: cardData,
       paymentData: paymentData
     });
-    expect(transaction).to.be.object;
+    expect(transaction).to.not.be.undefined;
   });
 
   it("should return risk status for flagged test card", function () {
     const cardData = {
       name: "Test User",
-      email: "test@gmail.com"
+      number: RISKY_TEST_CARD,
+      expireMonth: "2",
+      expireYear: "2018",
+      cvv2: "123",
+      type: "visa"
     };
     const paymentData = {
       currency: "USD",
@@ -60,6 +69,7 @@ describe("PaystackApi", function () {
       cardData: cardData,
       paymentData: paymentData
     });
+
     expect(transaction.riskStatus).to.be.defined;
   });
 
@@ -70,10 +80,11 @@ describe("PaystackApi", function () {
       authorizationId: authorizationId,
       amount: amount
     });
-    expect(results).to.be.object;
+    expect(results).to.not.be.undefined;
     done();
   });
 });
+
 
 describe("Submit payment", function () {
   let sandbox;
@@ -93,7 +104,11 @@ describe("Submit payment", function () {
     this.timeout(30000);
     const cardData = {
       name: "Test User",
-      email: "test@gmail.com"
+      number: "4242424242424242",
+      expireMonth: "2",
+      expireYear: "2018",
+      cvv2: "123",
+      type: "visa"
     };
     const paymentData = {
       currency: "USD",
@@ -130,7 +145,8 @@ describe("Submit payment", function () {
     // Notice how you need to wrap this call in another function
     expect(function () {
       Meteor.call("paystackSubmit", "authorize", badCardData, paymentData);
-    }).to.throw;
+    }
+    ).to.throw;
   });
 });
 
@@ -195,11 +211,12 @@ describe("Refund", function () {
   });
 
   it("should throw an error if transaction ID is not found", function () {
-    sandbox.stub(PaystackApi.methods.refund, "call", function () {
-      throw new Meteor.Error("404", "Not Found");
-    });
+    sandbox.stub(
+      PaystackApi.methods.refund, "call", function () {
+        throw new Meteor.Error("404", "Not Found");
+      });
     const transactionId = "abc1234";
-    paymentMethod.transactionId = transactionId;
+    paymentMethod.transactionId =  transactionId;
     expect(function () {
       Meteor.call("paystack/refund/create", paymentMethod, 19.99);
     }).to.throw(Meteor.Error, /Not Found/);
@@ -234,3 +251,4 @@ describe("List Refunds", function () {
     expect(() => Meteor.call("paystack/refund/list", paymentMethod)).to.throw(Meteor.Error, /Not Found/);
   });
 });
+

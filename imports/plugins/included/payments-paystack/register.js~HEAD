@@ -2,8 +2,8 @@
 import { Reaction } from "/server/api";
 
 Reaction.registerPackage({
-  label: "ExamplePayment",
-  name: "example-paymentmethod",
+  label: "PaystackPayment",
+  name: "paystack-paymentmethod",
   icon: "fa fa-credit-card-alt",
   autoEnable: true,
   settings: {
@@ -12,7 +12,7 @@ Reaction.registerPackage({
     "example": {
       enabled: false
     },
-    "example-paymentmethod": {
+    "paystack-paymentmethod": {
       enabled: false,
       support: [
         "Authorize",
@@ -24,15 +24,15 @@ Reaction.registerPackage({
   registry: [
     // Settings panel
     {
-      label: "Example Payment", // this key (minus spaces) is used for translations
+      label: "Paystack Payment", // this key (minus spaces) is used for translations
       provides: ["paymentSettings"],
       container: "dashboard",
-      template: "exampleSettings"
+      template: "paystackSettings"
     },
 
     // Payment form for checkout
     {
-      template: "examplePaymentForm",
+      template: "paystackPaymentForm",
       provides: ["paymentMethod"],
       icon: "fa fa-credit-card-alt"
     }
