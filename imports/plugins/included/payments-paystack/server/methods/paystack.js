@@ -1,55 +1,11 @@
 /* eslint camelcase: 0 */
 // meteor modules
 import { Meteor } from "meteor/meteor";
-import { check, Match } from "meteor/check";
+import { check } from "meteor/check";
 // reaction modules
 import { Reaction, Logger } from "/server/api";
 import { PaystackApi } from "./paystackapi";
-
-function luhnValid(x) {
-  return [...x].reverse().reduce((sum, c, i) => {
-    let d = parseInt(c, 10);
-    if (i % 2 !== 0) { d *= 2; }
-    if (d > 9) { d -= 9; }
-    return sum + d;
-  }, 0) % 10 === 0;
-}
-
-const ValidCardNumber = Match.Where(function (x) {
-  return /^[0-9]{13,16}$/.test(x) && luhnValid(x);
-});
-
-const ValidExpireMonth = Match.Where(function (x) {
-  return /^[0-9]{1,2}$/.test(x);
-});
-
-const ValidExpireYear = Match.Where(function (x) {
-  return /^[0-9]{4}$/.test(x);
-});
-
-const ValidCVV = Match.Where(function (x) {
-  return /^[0-9]{3,4}$/.test(x);
-});
-
-// function chargeObj() {
-//   return {
-//     amount: "",
-//     currency: "",
-//     card: {},
-//     capture: true
-//   };
-// }
-
-// function parseCardData(data) {
-//   return {
-//     number: data.number,
-//     name: data.name,
-//     cvc: data.cvv2,
-//     expireMonth: data.expire_month,
-//     expireYear: data.expire_year
-//   };
-// }
-
+import { Packages } from "/lib/collections";
 
 Meteor.methods({
   /**
@@ -63,11 +19,7 @@ Meteor.methods({
     check(transactionType, String);
     check(cardData, {
       name: String,
-      number: ValidCardNumber,
-      expireMonth: ValidExpireMonth,
-      expireYear: ValidExpireYear,
-      cvv2: ValidCVV,
-      type: String
+      email: String
     });
 
     check(paymentData, {
@@ -111,7 +63,7 @@ Meteor.methods({
    * @param {Object} paymentData Object containing data about the transaction to capture
    * @return {Object} results normalized
    */
-  "paystack/payment/capture": function (paymentData) {
+  "paystack/payment/capture": paymentData => {
     check(paymentData, Reaction.Schemas.PaymentMethod);
     const authorizationId = paymentData.transactionId;
     const amount = paymentData.amount;
@@ -124,6 +76,18 @@ Meteor.methods({
       response: response
     };
     return result;
+  },
+
+  "paystack/loadApiKeys": () => {
+    const packageData = Packages.findOne({
+      name: "paystack-paymentmethod",
+      shopId: Reaction.getShopId()
+    });
+    const { publicKey, secretKey } = packageData.settings["paystack-paymentmethod"];
+    return {
+      publicKey,
+      secretKey
+    };
   },
 
   /**
@@ -163,15 +127,6 @@ Meteor.methods({
       result.push(refund);
     }
 
-    // The results retured from the GenericAPI just so happen to look like exactly what the dashboard
-    // wants. The return package should ba an array of objects that look like this
-    // {
-    //   type: "refund",
-    //   amount: Number,
-    //   created: Number: Epoch Time,
-    //   currency: String,
-    //   raw: Object
-    // }
     const emptyResult = [];
     return emptyResult;
   }

@@ -14,7 +14,6 @@ const paymentMethod = {
   createdAt: new Date()
 };
 
-
 describe("PaystackApi", function () {
   let sandbox;
 
@@ -85,7 +84,6 @@ describe("PaystackApi", function () {
   });
 });
 
-
 describe("Submit payment", function () {
   let sandbox;
 
@@ -145,8 +143,7 @@ describe("Submit payment", function () {
     // Notice how you need to wrap this call in another function
     expect(function () {
       Meteor.call("paystackSubmit", "authorize", badCardData, paymentData);
-    }
-    ).to.throw;
+    }).to.throw;
   });
 });
 
@@ -211,12 +208,11 @@ describe("Refund", function () {
   });
 
   it("should throw an error if transaction ID is not found", function () {
-    sandbox.stub(
-      PaystackApi.methods.refund, "call", function () {
-        throw new Meteor.Error("404", "Not Found");
-      });
+    sandbox.stub(PaystackApi.methods.refund, "call", function () {
+      throw new Meteor.Error("404", "Not Found");
+    });
     const transactionId = "abc1234";
-    paymentMethod.transactionId =  transactionId;
+    paymentMethod.transactionId = transactionId;
     expect(function () {
       Meteor.call("paystack/refund/create", paymentMethod, 19.99);
     }).to.throw(Meteor.Error, /Not Found/);
@@ -251,4 +247,3 @@ describe("List Refunds", function () {
     expect(() => Meteor.call("paystack/refund/list", paymentMethod)).to.throw(Meteor.Error, /Not Found/);
   });
 });
-

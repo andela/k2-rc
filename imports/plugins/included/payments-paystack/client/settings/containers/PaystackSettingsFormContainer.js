@@ -12,7 +12,8 @@ class PaystackSettingsFormContainer extends Component {
     super(props);
 
     this.state = {
-      apiKey: "278302390293"
+      secretKey: "278302390293",
+      publicKey: "278302390293"
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -22,7 +23,8 @@ class PaystackSettingsFormContainer extends Component {
 
   handleChange(e) {
     e.preventDefault();
-    this.setState({ apiKey: e.target.value });
+    this.setState({ secretKey: e.target.value });
+    this.setState({ privateKey: e.target.value });
   }
 
   handleSubmit(settings) {
@@ -31,19 +33,26 @@ class PaystackSettingsFormContainer extends Component {
     const packageId = this.props.packageData._id;
     const settingsKey = this.props.packageData.registry[0].settingsKey;
 
-    const fields = [{
-      property: "apiKey",
-      value: settings.apiKey
-    }, {
-      property: "support",
-      value: settings.support
-    }];
+    const fields = [
+      {
+        property: "secretKey",
+        value: settings.secretKey
+      },
+      {
+        property: "publicKey",
+        value: settings.publicKey
+      },
+      {
+        property: "support",
+        value: settings.support
+      }
+    ];
 
     this.saveUpdate(fields, packageId, settingsKey);
   }
 
   saveUpdate(fields, id, settingsKey) {
-    Meteor.call("registry/update", id, settingsKey, fields, (err) => {
+    Meteor.call("registry/update", id, settingsKey, fields, err => {
       if (err) {
         return Alerts.toast(i18next.t("admin.settings.saveFailed"), "error");
       }
@@ -55,11 +64,7 @@ class PaystackSettingsFormContainer extends Component {
     const settingsKey = this.props.packageData.registry[0].settingsKey;
     return (
       <TranslationProvider>
-        <PaystackSettingsForm
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-          settings={this.props.packageData.settings[settingsKey]}
-        />
+        <PaystackSettingsForm onChange={this.handleChange} onSubmit={this.handleSubmit} settings={this.props.packageData.settings[settingsKey]} />
       </TranslationProvider>
     );
   }

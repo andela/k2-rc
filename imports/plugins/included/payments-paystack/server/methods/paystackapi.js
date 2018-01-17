@@ -16,7 +16,6 @@ const ThirdPartyAPI = {
       const results = {
         success: true,
         id: Random.id(),
-        cardNumber: cardData.number.slice(-4),
         amount: paymentData.total,
         currency: "USD"
       };
@@ -68,12 +67,8 @@ export const PaystackApi = {};
 PaystackApi.methods = {};
 
 export const cardSchema = new SimpleSchema({
-  number: { type: String },
   name: { type: String },
-  cvv2: { type: String },
-  expireMonth: { type: String },
-  expireYear: { type: String },
-  type: { type: String }
+  email: { type: String }
 });
 
 registerSchema("cardSchema", cardSchema);
@@ -84,7 +79,6 @@ export const paymentDataSchema = new SimpleSchema({
 });
 
 registerSchema("paymentDataSchema", paymentDataSchema);
-
 
 PaystackApi.methods.authorize = new ValidatedMethod({
   name: "PaystackApi.methods.authorize",
@@ -99,7 +93,6 @@ PaystackApi.methods.authorize = new ValidatedMethod({
   }
 });
 
-
 PaystackApi.methods.capture = new ValidatedMethod({
   name: "PaystackApi.methods.capture",
   validate: new SimpleSchema({
@@ -108,18 +101,17 @@ PaystackApi.methods.capture = new ValidatedMethod({
   }).validator(),
   run(args) {
     const transactionId = args.authorizationId;
-    const amount = args.amount;
+    const { amount } = args;
     const results = ThirdPartyAPI.capture(transactionId, amount);
     return results;
   }
 });
 
-
 PaystackApi.methods.refund = new ValidatedMethod({
   name: "PaystackApi.methods.refund",
   validate: new SimpleSchema({
     transactionId: { type: String },
-    amount: { type: Number, decimal: true  }
+    amount: { type: Number, decimal: true }
   }).validator(),
   run(args) {
     const transactionId = args.transactionId;
@@ -128,7 +120,6 @@ PaystackApi.methods.refund = new ValidatedMethod({
     return results;
   }
 });
-
 
 PaystackApi.methods.refunds = new ValidatedMethod({
   name: "PaystackApi.methods.refunds",
