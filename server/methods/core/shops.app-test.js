@@ -42,45 +42,6 @@ describe("core shop methods", function () {
   afterEach(function () {
     sandbox.restore();
   });
-
-  describe("shop/createShop", function () {
-    beforeEach(function () {
-      Shops.remove({});
-    });
-
-    it("should throw 403 error by non admin", function (done) {
-      sandbox.stub(Reaction, "hasPermission", () => false);
-      const insertShopSpy = sandbox.spy(Shops, "insert");
-      function createShopFunc() {
-        return Meteor.call("shop/createShop");
-      }
-      expect(createShopFunc).to.throw(Meteor.Error, /Access Denied/);
-      expect(insertShopSpy).to.not.have.been.called;
-      return done();
-    });
-
-    it("should create new shop for admin for userId and shopObject", function () {
-      this.timeout(5000);
-      sandbox.stub(Meteor, "user", () => {
-        return {
-          userId: "12345678",
-          emails: [{
-            address: "user@example.com",
-            provides: "default",
-            verified: true
-          }]
-        };
-      });
-      const shopId = Random.id();
-      Factory.create("account", { _id: "12345678", shopId: shopId });
-
-      sandbox.stub(Reaction, "hasPermission", () => true);
-      sandbox.stub(Reaction, "getPrimaryShopId", () => shopId);
-      Meteor.call("shop/createShop", "12345678", shop);
-      const newShopCount = Shops.find({ name: shop.name }).count();
-      expect(newShopCount).to.equal(1);
-    });
-  });
 });
 
 describe("shop/changeLayouts", function () {

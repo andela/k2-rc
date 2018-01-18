@@ -20,7 +20,6 @@ import { createGroups } from "./groups";
 const { Jobs, Packages, Shops } = Collections;
 
 export default {
-
   init() {
     // run beforeCoreInit hooks
     Hooks.Events.run("beforeCoreInit");
@@ -64,11 +63,11 @@ export default {
   Packages: {},
 
   registerPackage(packageInfo) {
-    const registeredPackage = this.Packages[packageInfo.name] = packageInfo;
+    const registeredPackage = (this.Packages[packageInfo.name] = packageInfo);
     return registeredPackage;
   },
-  defaultCustomerRoles: [ "guest", "account/profile", "product", "tag", "index", "cart/checkout", "cart/completed"],
-  defaultVisitorRoles: ["anonymous", "guest", "product", "tag", "index", "cart/checkout", "cart/completed"],
+  defaultCustomerRoles: ["guest", "account/profile", "product", "tag", "index", "cart/checkout", "cart/completed", "staticPageView"],
+  defaultVisitorRoles: ["anonymous", "guest", "product", "tag", "index", "cart/checkout", "cart/completed", "staticPageView"],
   createGroups,
   /**
    * canInviteToGroup
@@ -223,10 +222,11 @@ export default {
   },
 
   getPrimaryShopSettings() {
-    const settings = Packages.findOne({
-      name: "core",
-      shopId: this.getPrimaryShopId()
-    }) || {};
+    const settings =
+      Packages.findOne({
+        name: "core",
+        shopId: this.getPrimaryShopId()
+      }) || {};
     return settings.settings || {};
   },
 
@@ -291,14 +291,17 @@ export default {
     // TODO: This should intelligently find the correct default shop
     // Probably whatever the main shop is or the marketplace
     const domain = this.getDomain();
-    const shop = Shops.find({
-      domains: domain
-    }, {
-      limit: 1,
-      fields: {
-        _id: 1
+    const shop = Shops.find(
+      {
+        domains: domain
+      },
+      {
+        limit: 1,
+        fields: {
+          _id: 1
+        }
       }
-    }).fetch()[0];
+    ).fetch()[0];
     return shop && shop._id;
   },
 
@@ -310,22 +313,28 @@ export default {
     const shopId = this.getShopId();
     let shop;
     if (shopId) {
-      shop = Shops.findOne({
-        _id: shopId
-      }, {
-        fields: {
-          name: 1
+      shop = Shops.findOne(
+        {
+          _id: shopId
+        },
+        {
+          fields: {
+            name: 1
+          }
         }
-      });
+      );
     } else {
       const domain = this.getDomain();
-      shop = Shops.findOne({
-        domains: domain
-      }, {
-        fields: {
-          name: 1
+      shop = Shops.findOne(
+        {
+          domains: domain
+        },
+        {
+          fields: {
+            name: 1
+          }
         }
-      });
+      );
     }
     if (shop && shop.name) {
       return shop.name;
@@ -343,14 +352,17 @@ export default {
   },
 
   getShopEmail() {
-    const shop = Shops.find({
-      _id: this.getShopId()
-    }, {
-      limit: 1,
-      fields: {
-        emails: 1
+    const shop = Shops.find(
+      {
+        _id: this.getShopId()
+      },
+      {
+        limit: 1,
+        fields: {
+          emails: 1
+        }
       }
-    }).fetch()[0];
+    ).fetch()[0];
     return shop && shop.emails && shop.emails[0].address;
   },
 
@@ -364,18 +376,21 @@ export default {
       _id: this.getShopId()
     });
 
-    return shop && shop.currency || "USD";
+    return (shop && shop.currency) || "USD";
   },
 
   // TODO: Marketplace - should each shop set their own default language or
   // should the Marketplace set a language that's picked up by all shops?
   getShopLanguage() {
-    const { language } = Shops.findOne({
-      _id: this.getShopId()
-    }, {
-      fields: {
-        language: 1
-      } }
+    const { language } = Shops.findOne(
+      {
+        _id: this.getShopId()
+      },
+      {
+        fields: {
+          language: 1
+        }
+      }
     );
     return language;
   },
@@ -454,12 +469,11 @@ export default {
 
     // Unless we have marketplace settings and an enabledPackagesByShopTypes Array
     // we will skip this
-    if (marketplaceSettings &&
-        marketplaceSettings.shops &&
-        Array.isArray(marketplaceSettings.shops.enabledPackagesByShopTypes)) {
+    if (marketplaceSettings && marketplaceSettings.shops && Array.isArray(marketplaceSettings.shops.enabledPackagesByShopTypes)) {
       // Find the correct packages list for this shopType
       const matchingShopType = marketplaceSettings.shops.enabledPackagesByShopTypes.find(
-        EnabledPackagesByShopType => EnabledPackagesByShopType.shopType === shop.shopType);
+        EnabledPackagesByShopType => EnabledPackagesByShopType.shopType === shop.shopType
+      );
       if (matchingShopType) {
         enabledPackages = matchingShopType.enabledPackages;
       }
@@ -622,14 +636,17 @@ export default {
 
     // unless strict security is enabled, mark the admin's email as validated
     if (!isSecureSetup) {
-      Meteor.users.update({
-        "_id": accountId,
-        "emails.address": options.email
-      }, {
-        $set: {
-          "emails.$.verified": true
+      Meteor.users.update(
+        {
+          "_id": accountId,
+          "emails.address": options.email
+        },
+        {
+          $set: {
+            "emails.$.verified": true
+          }
         }
-      });
+      );
     } else {
       // send verification email to admin
       sendVerificationEmail(accountId);
@@ -690,7 +707,7 @@ export default {
       // or attempt to load reaction.json fixture data
       try {
         registryFixtureData = Assets.getText("settings/reaction.json");
-        Logger.info("Loaded \"/private/settings/reaction.json\" for registry fixture import");
+        Logger.info('Loaded "/private/settings/reaction.json" for registry fixture import');
       } catch (error) {
         Logger.warn("Skipped loading settings from reaction.json.");
         Logger.debug(error, "loadSettings reaction.json not loaded.");
@@ -710,7 +727,7 @@ export default {
     const layouts = [];
     // for each shop, we're loading packages in a unique registry
     _.each(this.Packages, (config, pkgName) => {
-      return Shops.find().forEach((shop) => {
+      return Shops.find().forEach(shop => {
         const shopId = shop._id;
         if (!shopId) return [];
 
@@ -730,25 +747,27 @@ export default {
         // Setting from a fixture file, most likely reaction.json
         let settingsFromFixture;
         if (registryFixtureData) {
-          settingsFromFixture = _.find(registryFixtureData[0], (packageSetting) => {
+          settingsFromFixture = _.find(registryFixtureData[0], packageSetting => {
             return config.name === packageSetting.name;
           });
         }
 
         // Setting already imported into the packages collection
-        const settingsFromDB = _.find(packages, (ps) => {
-          return (config.name === ps.name && shopId === ps.shopId);
+        const settingsFromDB = _.find(packages, ps => {
+          return config.name === ps.name && shopId === ps.shopId;
         });
 
         const combinedSettings = merge({}, settingsFromPackage, settingsFromFixture || {}, settingsFromDB || {});
 
         if (combinedSettings.registry) {
-          combinedSettings.registry = combinedSettings.registry.map((entry) => {
+          combinedSettings.registry = combinedSettings.registry.map(entry => {
             if (entry.provides && !Array.isArray(entry.provides)) {
               entry.provides = [entry.provides];
-              Logger.warn(`Plugin ${combinedSettings.name} is using a deprecated version of the provides property for` +
-                          ` the ${entry.name || entry.route} registry entry. Since v1.5.0 registry provides accepts` +
-                          " an array of strings.");
+              Logger.warn(
+                `Plugin ${combinedSettings.name} is using a deprecated version of the provides property for` +
+                  ` the ${entry.name || entry.route} registry entry. Since v1.5.0 registry provides accepts` +
+                  " an array of strings."
+              );
             }
             return entry;
           });
@@ -772,15 +791,15 @@ export default {
     // helper for removing layout duplicates
     const uniqLayouts = uniqWith(layouts, _.isEqual);
     // import layouts into Shops
-    Shops.find().forEach((shop) => {
+    Shops.find().forEach(shop => {
       this.Import.layout(uniqLayouts, shop._id);
     });
 
     //
     // package cleanup
     //
-    Shops.find().forEach((shop) => {
-      return Packages.find().forEach((pkg) => {
+    Shops.find().forEach(shop => {
+      return Packages.find().forEach(pkg => {
         // delete registry entries for packages that have been removed
         if (!_.has(this.Packages, pkg.name)) {
           Logger.debug(`Removing ${pkg.name}`);
@@ -826,9 +845,9 @@ export default {
     // if we have `_simpleSchemas` (plural), then this is a selector based schema
     if (c2._simpleSchemas) {
       const selectorKeys = Object.keys(selector);
-      const selectorSchema = c2._simpleSchemas.find((schema) => {
+      const selectorSchema = c2._simpleSchemas.find(schema => {
         // Make sure that every key:value in our selector matches the key:value in the schema selector
-        return selectorKeys.every((key) => selector[key] === schema.selector[key]);
+        return selectorKeys.every(key => selector[key] === schema.selector[key]);
       });
 
       if (!selectorSchema) {

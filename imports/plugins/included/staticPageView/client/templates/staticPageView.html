@@ -1,0 +1,15 @@
+<template name="staticPageView">
+  <main class="main">
+    {{#each pageDetail in staticPage pageAddress}}
+    <div class="section">
+      <h2 class="static-title">{{pageDetail.title}}</h2>
+      <hr/>
+      <div class='row'>
+        <div class="col-md-12 text4">
+          {{{pageDetail.content}}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </main>
+</template>
