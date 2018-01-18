@@ -41,7 +41,7 @@ describe("PaystackApi", function () {
       cardData: cardData,
       paymentData: paymentData
     });
-    expect(transaction).to.not.be.undefined;
+    expect(transaction).to.be.object;
   });
 
   it("should return risk status for flagged test card", function () {
@@ -60,7 +60,6 @@ describe("PaystackApi", function () {
       cardData: cardData,
       paymentData: paymentData
     });
-
     expect(transaction.riskStatus).to.be.defined;
   });
 
@@ -71,7 +70,7 @@ describe("PaystackApi", function () {
       authorizationId: authorizationId,
       amount: amount
     });
-    expect(results).to.not.be.undefined;
+    expect(results).to.be.object;
     done();
   });
 });
