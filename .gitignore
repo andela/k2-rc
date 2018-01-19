@@ -12,6 +12,7 @@
 *.seed
 *.sublime-project
 *.sublime-workspace
+.env
 
 lib-cov
 logs
