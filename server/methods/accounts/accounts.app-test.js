@@ -1,4 +1,5 @@
 /* eslint dot-notation: 0 */
+import faker from "faker";
 import _ from  "lodash";
 import { Meteor } from "meteor/meteor";
 import { Factory } from "meteor/dburles:factory";
@@ -7,7 +8,7 @@ import { Random } from "meteor/random";
 import { Accounts as MeteorAccount } from "meteor/accounts-base";
 import { expect } from "meteor/practicalmeteor:chai";
 import { sinon } from "meteor/practicalmeteor:sinon";
-import { Accounts, Packages, Orders, Products, Shops, Cart }  from "/lib/collections";
+import { Accounts, Packages, Orders, Products, Shops, Cart, Ratings }  from "/lib/collections";
 import { Reaction } from "/server/api";
 import { getShop, getAddress } from "/server/imports/fixtures/shops";
 import Fixtures from "/server/imports/fixtures";
@@ -59,6 +60,73 @@ describe("Account Meteor method ", function () {
       return originals[method].apply(this, arguments);
     });
   }
+
+
+  describe("Ratings and reviews", function () {
+    const fakeProduct = Factory.create("product");
+
+    it("should allow a user add a rating to a product", function (done) {
+      const userObject = {
+        rating: 4,
+        reviewText: "",
+        userName: faker.name.findName(),
+        productId: fakeProduct._id,
+        createdAt: faker.date.past(),
+        updatedAt: new Date()
+      };
+
+      Ratings.insert(userObject);
+
+      const ratingResult = Ratings.findOne();
+      expect(ratingResult).to.have.property("rating");
+
+      return done();
+    });
+
+    it("should allow a user add a rating and review to a product", function (done) {
+      const userObject = {
+        rating: 5,
+        reviewText: "Awesome product",
+        userName: faker.name.findName(),
+        productId: fakeProduct._id,
+        createdAt: faker.date.past(),
+        updatedAt: new Date()
+      };
+
+      let result;
+      Ratings.insert(userObject, function (err, insertedId) {
+        result = Ratings.findOne({ _id: insertedId });
+        const reviewText = result.reviewText;
+        const expectedText = "Awesome product";
+
+        expect(reviewText).to.equal(expectedText);
+      });
+
+      return done();
+    });
+
+    it("should check if review exists in a product", function (done) {
+      const userObject = {
+        rating: 2,
+        reviewText: "",
+        userName: faker.name.findName(),
+        productId: fakeProduct._id,
+        createdAt: faker.date.past(),
+        updatedAt: new Date()
+      };
+
+      Ratings.insert(userObject, function (err, insertedId) {
+        const result = Ratings.findOne({ _id: insertedId });
+        const reviewText = result.reviewText;
+        const expectedText = undefined;
+
+        expect(reviewText).to.equal(expectedText);
+      });
+
+
+      return done();
+    });
+  });
 
   describe("addressBookAdd", function () {
     beforeEach(function () {
