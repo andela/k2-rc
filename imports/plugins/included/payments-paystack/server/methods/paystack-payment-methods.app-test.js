@@ -28,11 +28,7 @@ describe("PaystackApi", function () {
   it("should return data from ThirdPartyAPI authorize", function () {
     const cardData = {
       name: "Test User",
-      number: "4242424242424242",
-      expireMonth: "2",
-      expireYear: "2018",
-      cvv2: "123",
-      type: "visa"
+      email: "test@gmail.com"
     };
     const paymentData = {
       currency: "USD",
@@ -45,17 +41,13 @@ describe("PaystackApi", function () {
       cardData: cardData,
       paymentData: paymentData
     });
-    expect(transaction).to.not.be.undefined;
+    expect(transaction).to.be.object;
   });
 
   it("should return risk status for flagged test card", function () {
     const cardData = {
       name: "Test User",
-      number: RISKY_TEST_CARD,
-      expireMonth: "2",
-      expireYear: "2018",
-      cvv2: "123",
-      type: "visa"
+      email: "test@gmail.com"
     };
     const paymentData = {
       currency: "USD",
@@ -79,7 +71,7 @@ describe("PaystackApi", function () {
       authorizationId: authorizationId,
       amount: amount
     });
-    expect(results).to.not.be.undefined;
+    expect(results).to.be.object;
     done();
   });
 });
@@ -102,11 +94,7 @@ describe("Submit payment", function () {
     this.timeout(30000);
     const cardData = {
       name: "Test User",
-      number: "4242424242424242",
-      expireMonth: "2",
-      expireYear: "2018",
-      cvv2: "123",
-      type: "visa"
+      email: "test@gmail.com"
     };
     const paymentData = {
       currency: "USD",

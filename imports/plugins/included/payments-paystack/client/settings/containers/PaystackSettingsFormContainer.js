@@ -30,8 +30,6 @@ class PaystackSettingsFormContainer extends Component {
   }
 
   handleSubmit(settings) {
-    // e.preventDefault();
-
     const packageId = this.props.packageData._id;
     const settingsKey = this.props.packageData.registry[0].settingsKey;
 
