@@ -8,6 +8,8 @@ import { Random } from "meteor/random";
 import { Accounts as MeteorAccount } from "meteor/accounts-base";
 import { expect } from "meteor/practicalmeteor:chai";
 import { sinon } from "meteor/practicalmeteor:sinon";
+import moxios from "moxios";
+import nock from "nock";
 import { Accounts, Packages, Orders, Products, Shops, Cart, Ratings }  from "/lib/collections";
 import { Reaction } from "/server/api";
 import { getShop, getAddress } from "/server/imports/fixtures/shops";
@@ -123,6 +125,42 @@ describe("Account Meteor method ", function () {
         expect(reviewText).to.equal(expectedText);
       });
 
+
+      return done();
+    });
+  });
+
+  describe.only("RESTful API endpoint", function () {
+    beforeEach(() => moxios.install());
+    afterEach(() => moxios.uninstall());
+
+    const adminDetails = {
+      email: "admin@localhost",
+      password: "r3@cti0n"
+    };
+    const responseJson = {
+      status: "success",
+      data: {
+        authToken: "C4tV-MOWx93GqYM9p3oe9GoOtDiYM-GYP8RSif91vgH",
+        userId: "u34JKhNcBfyX2tceP"
+      }
+    };
+
+    const loginScope = nock("http://localhost:3000")
+      .post("/api/v1/login", adminDetails)
+      .reply(200, responseJson);
+
+    const responseBody = JSON.parse(loginScope.interceptors[0].body);
+
+    it("should check if response from login API endpoint is an object", function (done) {
+      expect(responseBody).to.not.be.undefined;
+      expect(responseBody).to.be.an("object");
+
+      return done();
+    });
+
+    it("should check if response from login API endpoint is equal to mock response", function (done) {
+      expect(responseBody.data.authToken).to.equal(responseJson.data.authToken);
 
       return done();
     });

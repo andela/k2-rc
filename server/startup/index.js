@@ -6,6 +6,7 @@ import Init from "./init";
 import Prerender from "./prerender";
 import { initTemplates } from "/server/api/core/templates";
 import Environment from "./enivronment";
+import RestfulApis from "./restful-apis";
 
 
 export default function () {
@@ -17,4 +18,5 @@ export default function () {
   Init();
   Prerender();
   Environment();
+  RestfulApis();
 }
