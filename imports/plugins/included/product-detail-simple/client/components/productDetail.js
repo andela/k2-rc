@@ -28,6 +28,7 @@ class ProductDetail extends Component {
               layoutProps={this.props}
             />
           </div>
+          {<Components.Ratings product={this.product} />}
         </div>
       </div>
     );
