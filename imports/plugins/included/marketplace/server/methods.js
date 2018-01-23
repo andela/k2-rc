@@ -9,9 +9,10 @@ const status = [
   SHOP_WORKFLOW_STATUS_DISABLED
 ];
 
-export function marketplaceUpdateShopWorkflow(shopId, workflowStatus) {
+export function marketplaceUpdateShopWorkflow(shopId, workflowStatus, email) {
   check(shopId, String);
   check(workflowStatus, String);
+  check(email, String);
 
   if (shopId === Reaction.getPrimaryShopId()) {
     throw new Meteor.Error("access-denied", "Cannot change shop status");
@@ -22,6 +23,20 @@ export function marketplaceUpdateShopWorkflow(shopId, workflowStatus) {
   }
 
   if (status.includes(workflowStatus)) {
+    let message = "";
+    if (`${workflowStatus}`.toLowerCase() === "active") {
+      message = `Your shop has been activated.
+        <br>You can now login on reaction commerce to manage your shop.`;
+    } else {
+      message = `Your shop has been deactivated.
+      <br>Contact the administrator for more information`;
+    }
+    Reaction.Email.send({
+      to: email,
+      from: "abdulfataiaka@gmail.com",
+      subject: "Reaction commerce",
+      html: `<h2>Vendor shop status</h2>${message}`
+    });
     return Shops.update({
       _id: shopId
     }, {

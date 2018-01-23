@@ -66,7 +66,6 @@ Meteor.methods({
 
     let shopUser = currentUser;
     let shopAccount = currentAccount;
-
     // TODO: Create a grantable permission for creating shops so we can decouple ownership from shop creation
     // Only marketplace owners can create shops for others
     if (hasPrimaryShopOwnerPermission) {

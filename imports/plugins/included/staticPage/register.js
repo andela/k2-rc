@@ -10,7 +10,7 @@ Reaction.registerPackage({
   },
   registry: [
     {
-      provides: "dashboard",
+      provides: ["dashboard"],
       route: "/dashboard/static",
       name: "static-page",
       label: "Static Page",

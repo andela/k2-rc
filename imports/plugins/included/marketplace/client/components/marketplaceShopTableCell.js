@@ -24,11 +24,12 @@ class MarketplaceShopTableCell extends Component {
   }
 
   handleWorkflowChange = (event, value) => {
+    const email = this.props.data.original.emails[0].address;
     if (this.props.onWorkflowChange) {
       // Get the shop id from the original document
       const { _id } = this.shop;
 
-      this.props.onWorkflowChange(_id, value);
+      this.props.onWorkflowChange(_id, value, email);
     }
   }
 

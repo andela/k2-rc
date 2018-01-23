@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Components, registerComponent, composeWithTracker } from "@reactioncommerce/reaction-components";
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
-import { Router } from "/client/api";
+import { Router, i18next } from "/client/api";
 import { ServiceConfigHelper, LoginFormSharedHelpers } from "../helpers";
 import { LoginFormValidation } from "/lib/api";
 
@@ -33,7 +33,8 @@ class AuthContainer extends Component {
     this.hasPasswordService = this.hasPasswordService.bind(this);
   }
 
-  handleFormSubmit = (event, email, password) => {
+  handleFormSubmit = (event, email, password, isVendorCheck) => {
+    const isVendor = isVendorCheck === true ? true : false;
     event.preventDefault();
 
     this.setState({
@@ -78,11 +79,19 @@ class AuthContainer extends Component {
         }
       });
     } else if (this.props.currentView === "loginFormSignUpView") {
-      const newUserData = {
+      let newUserData = {
         email: username,
         password: pword
       };
 
+      if (isVendor) {
+        newUserData = {
+          ...newUserData,
+          profile: {
+            name: "Vendor"
+          }
+        };
+      }
       Accounts.createUser(newUserData, (error) => {
         if (error) {
           this.setState({
@@ -92,6 +101,24 @@ class AuthContainer extends Component {
             }
           });
         } else {
+          if (isVendor) {
+            // Create user shop
+            Meteor.call("shop/createShop", Meteor.userId(), function (err) {
+              if (err) {
+                const errorMessage = i18next.t(
+                  "marketplace.errorCannotCreateShop",
+                  { defaultValue: "Could not create shop for current user {{user}}" }
+                );
+                return Alerts.toast(`${errorMessage} ${error}`, "error");
+              }
+              return Alerts.alert({
+                title: "Your shop is ready!, but needs to be activated. An email about the activation status will be sent to you",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "Ok"
+              });
+            });
+          }
           Router.go(this.props.currentRoute.route.path);
         }
       });

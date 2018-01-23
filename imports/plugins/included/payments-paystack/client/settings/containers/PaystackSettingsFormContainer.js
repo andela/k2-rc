@@ -9,6 +9,7 @@ import { Reaction, i18next } from "/client/api";
 import { PaystackSettingsForm } from "../components";
 
 dotenv.config();
+
 class PaystackSettingsFormContainer extends Component {
   constructor(props) {
     super(props);

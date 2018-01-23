@@ -1,6 +1,5 @@
 import { Reaction, Logger } from "/server/api";
 import LoadData from "./load-data";
-
 /*
  * Execute start up fixtures
  */
