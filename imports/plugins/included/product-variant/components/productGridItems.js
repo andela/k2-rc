@@ -20,19 +20,19 @@ class ProductGridItems extends Component {
     positions: PropTypes.func,
     product: PropTypes.object,
     weightClass: PropTypes.func
-  }
+  };
 
-  handleDoubleClick = (event) => {
+  handleDoubleClick = event => {
     if (this.props.onDoubleClick) {
       this.props.onDoubleClick(event);
     }
-  }
+  };
 
-  handleClick = (event) => {
+  handleClick = event => {
     if (this.props.onClick) {
       this.props.onClick(event);
     }
-  }
+  };
 
   renderPinned() {
     return this.props.positions().pinned ? "pinned" : "";
@@ -44,21 +44,15 @@ class ProductGridItems extends Component {
 
   renderOverlay() {
     if (this.props.product.isVisible === false) {
-      return (
-        <div className="product-grid-overlay" />
-      );
+      return <div className="product-grid-overlay" />;
     }
   }
 
   renderMedia() {
     if (this.props.media() === false) {
-      return (
-        <span className="product-image" style={{ backgroundImage: "url('/resources/placeholder.gif')" }} />
-      );
+      return <span className="product-image thumbnail" style={{ backgroundImage: "url('/resources/placeholder.gif')" }} />;
     }
-    return (
-      <span className="product-image" style={{ backgroundImage: `url('${this.props.media().url({ store: "large" })}')` }}/>
-    );
+    return <span className="product-image thumbnail" style={{ backgroundImage: `url('${this.props.media().url({ store: "large" })}')` }} />;
   }
 
   renderAdditionalMedia() {
@@ -66,7 +60,7 @@ class ProductGridItems extends Component {
       if (this.props.isMediumWeight()) {
         return (
           <div className={`product-additional-images ${this.renderVisible()}`}>
-            {this.props.additionalMedia().map((media) => {
+            {this.props.additionalMedia().map(media => {
               return <span key={media._id} className="product-image" style={{ backgroundImage: `url('${media.url({ store: "medium" })}')` }} />;
             })}
             {this.renderOverlay()}
@@ -82,13 +76,16 @@ class ProductGridItems extends Component {
         <Components.GridItemNotice product={this.props.product} />
         <Components.GridItemControls product={this.props.product} />
       </div>
-
     );
+  }
+
+  renderOverlayClass() {
+    return this.props.isSearch ? "" : "caption";
   }
 
   renderGridContent() {
     return (
-      <div className="grid-content">
+      <div className="grid-conten">
         <a
           href={this.props.pdpPath()}
           data-event-category="grid"
@@ -98,20 +95,20 @@ class ProductGridItems extends Component {
           onDoubleClick={this.handleDoubleClick}
           onClick={this.handleClick}
         >
-          <div className="overlay">
-            <div className="overlay-title">{this.props.product.title}</div>
-            <div className="currency-symbol">{formatPriceString(this.props.displayPrice())}</div>
-            {this.props.isSearch &&
-                <div className="overlay-description">{this.props.product.description}</div>
-            }
+          <div className={`${this.renderOverlayClass()}`}>
+            <center>
+              <h4 className="color-blue">{this.props.product.title}</h4>
+              <h4 className="color-blue">{formatPriceString(this.props.displayPrice())}</h4>
+            </center>
           </div>
+          {this.props.isSearch && <div className="overlay-description">{this.props.product.description}</div>}
         </a>
       </div>
     );
   }
 
   renderHoverClassName() {
-    return this.props.isSearch ? "item-content" : "";
+    return this.props.isSearch ? "item-content" : "item";
   }
 
   render() {
@@ -122,9 +119,28 @@ class ProductGridItems extends Component {
         id={this.props.product._id}
       >
         <div className={this.renderHoverClassName()}>
+          <div className="black-overlay" />
           <span className="product-grid-item-alerts" />
 
-          <a className="product-grid-item-images"
+          <div className="middle">
+            <button
+              type="button"
+              className="btn add-cart"
+              href={this.props.pdpPath()}
+              data-event-category="grid"
+              data-event-label="grid product click"
+              data-event-value={this.props.product._id}
+              onDoubleClick={this.handleDoubleClick}
+              onClick={this.handleClick}
+            >
+              <i className="fa fa-shopping-cart" />
+              <h4>Add To Cart</h4>
+              <h5>This Product is a beautiful piece from RC</h5>
+            </button>
+          </div>
+
+          <a
+            className="product-grid-item-images"
             href={this.props.pdpPath()}
             data-event-category="grid"
             data-event-label="grid product click"
@@ -147,11 +163,7 @@ class ProductGridItems extends Component {
     );
 
     if (this.props.canEdit) {
-      return (
-        this.props.connectDropTarget(
-          this.props.connectDragSource(productItem)
-        )
-      );
+      return this.props.connectDropTarget(this.props.connectDragSource(productItem));
     }
 
     return productItem;

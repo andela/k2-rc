@@ -60,6 +60,7 @@ describe("PaystackApi", function () {
       cardData: cardData,
       paymentData: paymentData
     });
+
     expect(transaction.riskStatus).to.be.defined;
   });
 

@@ -58,10 +58,6 @@ AutoForm.addHooks("paystack-payment-form", {
           reference: Random.id(),
           amount,
           callback(response) {
-          // const secretKey = secretKey;
-          // const reference = response.reference;
-          // console.log('sk', secretKey);
-          // console.log('ref', reference);
             if (response.reference) {
               Paystack.verify(response.reference, secretKey, (error, res) => {
                 if (error) {

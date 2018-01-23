@@ -4,18 +4,14 @@ import { Components } from "@reactioncommerce/reaction-components";
 
 class ProductGrid extends Component {
   static propTypes = {
+    isSearch: PropTypes.bool,
     products: PropTypes.array
-  }
+  };
 
-  renderProductGridItems = (products) => {
+  renderProductGridItems = products => {
     if (Array.isArray(products)) {
       return products.map((product, index) => {
-        return (
-          <Components.ProductGridItems
-            {...this.props}
-            product={product} key={index} index={index}
-          />
-        );
+        return <Components.ProductGridItems {...this.props} product={product} key={index} index={index} />;
       });
     }
     return (
@@ -27,12 +23,21 @@ class ProductGrid extends Component {
         </div>
       </div>
     );
-  }
+  };
 
   render() {
     return (
-      <div className="container-main">
+      <div className="container-main-padded">
         <div className="product-grid">
+          {Array.isArray(this.props.products) && (
+            <header className="title-section">
+              <div className="line" />
+              <center>
+                <h1 className="title-main">{this.props.isSearch ? "Search Results" : "Explore Products"}</h1>
+              </center>
+              <div className="line" />
+            </header>
+          )}
           <Components.DragDropProvider>
             <ul className="product-grid-list list-unstyled" id="product-grid-list">
               {this.renderProductGridItems(this.props.products)}
