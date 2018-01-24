@@ -130,7 +130,7 @@ describe("Account Meteor method ", function () {
     });
   });
 
-  describe.only("RESTful API endpoint", function () {
+  describe("RESTful API endpoint", function () {
     beforeEach(() => moxios.install());
     afterEach(() => moxios.uninstall());
 

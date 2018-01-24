@@ -133,8 +133,8 @@ class ProductGridItems extends Component {
               onDoubleClick={this.handleDoubleClick}
               onClick={this.handleClick}
             >
-              <i className="fa fa-shopping-cart" />
-              <h4>Add To Cart</h4>
+              <i className="fa fa-info-circle" />
+              <h4>View Product Details</h4>
               <h5>This Product is a beautiful piece from RC</h5>
             </button>
           </div>
