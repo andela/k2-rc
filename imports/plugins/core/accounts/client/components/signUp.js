@@ -21,11 +21,21 @@ class SignUp extends Component {
 
     this.state = {
       email: props.credentials.email,
-      password: props.credentials.password
+      password: props.credentials.password,
+      isVendor: false
     };
 
     this.handleFieldChange = this.handleFieldChange.bind(this);
+    this.vendorCheckChanged = this.vendorCheckChanged.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  vendorCheckChanged(event) {
+    let { checked } = event.target;
+    checked = checked === true ? true : false;
+    this.setState({
+      isVendor: checked
+    });
   }
 
   handleFieldChange = (event, value, field) => {
@@ -36,7 +46,12 @@ class SignUp extends Component {
 
   handleSubmit = (event) => {
     if (this.props.onFormSubmit) {
-      this.props.onFormSubmit(event, this.state.email, this.state.password);
+      this.props.onFormSubmit(
+        event,
+        this.state.email,
+        this.state.password,
+        this.state.isVendor,
+      );
     }
   }
 
@@ -136,6 +151,11 @@ class SignUp extends Component {
             {this.renderPasswordErrors()}
           </div>
 
+          <div className="vendor-check">
+            <input type="checkbox" onChange={this.vendorCheckChanged} />
+            <span>I am a vendor</span>
+          </div>
+          
           <div className="form-group">
             {this.renderSpinnerOnWait()}
           </div>

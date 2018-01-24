@@ -1,6 +1,6 @@
 {
   "ROOT_URL": "",
-  "MAIL_URL": "",
+  "MAIL_URL": "smtp://k2rcteam:k2rcteam12345@smtp.gmail.com:465",
   "reaction": {
     "REACTION_USER": "",
     "REACTION_AUTH": "",

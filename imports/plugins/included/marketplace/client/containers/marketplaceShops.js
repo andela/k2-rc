@@ -4,8 +4,8 @@ import { Shops } from "/lib/collections";
 import { Reaction } from "/client/api";
 import MarketplaceShops from "../components/marketplaceShops";
 
-const onWorkflowChange = (shopId, value) => {
-  Meteor.call("marketplace/updateShopWorkflow", shopId, value);
+const onWorkflowChange = (shopId, value, email) => {
+  Meteor.call("marketplace/updateShopWorkflow", shopId, value, email);
 };
 
 const composer = (props, onData) => {

@@ -7,7 +7,6 @@ class MarketplaceShops extends Component {
     onWorkflowChange: PropTypes.func,
     shops: PropTypes.arrayOf(PropTypes.object)
   }
-
   renderShopsTable() {
     const fields = ["name", "emails", "workflow"];
 
