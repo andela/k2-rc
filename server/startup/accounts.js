@@ -168,6 +168,11 @@ export default function () {
         _id: user._id
       });
 
+      if (!_.isEmpty(userDetails.emails)) {
+        Collections.Wallets.insert({ ownerEmail: userDetails.emails[0].address });
+      }
+
+
       // send a welcome email to new users,
       // but skip the first default admin user
       // (default admins already get a verification email)

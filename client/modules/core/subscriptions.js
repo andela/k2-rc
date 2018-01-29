@@ -53,6 +53,8 @@ Subscriptions.Groups = Subscriptions.Manager.subscribe("Groups");
 
 Subscriptions.Media = Subscriptions.Manager.subscribe("Media");
 
+Subscriptions.WalletHistories = Subscriptions.Manager.subscribe("UserWallet");
+
 /**
  * Subscriptions that need to reload on new sessions
  */
