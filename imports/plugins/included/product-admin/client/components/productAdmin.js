@@ -6,6 +6,8 @@ import "velocity-animate/velocity.ui";
 import { Components } from "@reactioncommerce/reaction-components";
 import { Router } from "/client/api";
 import update from "react/lib/update";
+import { ProductCategory } from "/lib/collections";
+import productCategoryList from "../../../products/productCategoryList";
 
 const fieldNames = [
   "title",
@@ -17,7 +19,8 @@ const fieldNames = [
   "facebookMsg",
   "twitterMsg",
   "pinterestMsg",
-  "googleplusMsg"
+  "googleplusMsg",
+  "productCategory"
 ];
 
 const fieldGroups = {
@@ -218,7 +221,18 @@ class ProductAdmin extends Component {
     return this.state.expandedCard === groupName;
   }
 
+  productCatgoryFunction() {
+    return productCategoryList.map(category => {
+      ProductCategory.insert({
+        title: category.title,
+        isDigital: category.isDigital
+      });
+    });
+  }
+
   render() {
+    console.log("\n template", this.props.templates, "\n categories", productCategoryList);
+    console.log("\n productTemplate", this.product.template);
     return (
       <Components.CardGroup>
         <Components.Card
@@ -316,6 +330,18 @@ class ProductAdmin extends Component {
               ref="countryOfOriginInput"
               value={this.product.originCountry}
               options={this.props.countries}
+            />
+            <Components.Select
+              clearable={false}
+              i18nKeyLabel="productDetailEdit.productCategory"
+              i18nKeyPlaceholder="productDetailEdit.productCategory"
+              label="Product Category"
+              name="productCategory"
+              onChange={this.handleSelectChange}
+              placeholder="Select a Category"
+              ref="productCategoryInput"
+              value={this.product.productCategory}
+              options={productCategoryList}
             />
           </Components.CardBody>
         </Components.Card>
@@ -425,6 +451,7 @@ class ProductAdmin extends Component {
 }
 
 ProductAdmin.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.object),
   countries: PropTypes.arrayOf(PropTypes.object),
   editFocus: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   editable: PropTypes.bool,
