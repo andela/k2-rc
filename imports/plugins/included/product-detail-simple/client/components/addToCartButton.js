@@ -16,23 +16,34 @@ class AddToCartButton extends Component {
   render() {
     if (this.hasVariants) {
       return (
-        <div className="pdp add-to-cart block">
-          <input
-            className="form-control input-md"
-            id="add-to-cart-quantity"
-            min="1"
-            name="addToCartQty"
-            onChange={this.handleCartQuantityChange}
-            type="number"
-            value={this.props.cartQuantity}
+        <div>
+          <div className="pdp add-to-cart block">
+            <input
+              className="form-control input-md"
+              id="add-to-cart-quantity"
+              min="1"
+              name="addToCartQty"
+              onChange={this.handleCartQuantityChange}
+              type="number"
+              value={this.props.cartQuantity}
+            />
+            <button
+              className="input-group-addon add-to-cart-text js-add-to-cart"
+              data-i18n="productDetail.addToCart"
+              onClick={this.props.onClick || this.props.onAddToCart}
+            >
+              <Components.Translation defaultValue="Add to cart" i18nKey="productDetail.addToCart" />
+            </button>
+          </div>
+          <iframe
+            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fk2RcEcommerce%2F&tabs=timeline&width=500&height=300&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=419444465069807"
+            width="500"
+            height="300"
+            style={{ border: "none", overflow: "hidden",  margin: "5% 0% 0% 10%" }}
+            scrolling="no"
+            frameBorder="0"
+            allowTransparency="true"
           />
-          <button
-            className="input-group-addon add-to-cart-text js-add-to-cart"
-            data-i18n="productDetail.addToCart"
-            onClick={this.props.onClick || this.props.onAddToCart}
-          >
-            <Components.Translation defaultValue="Add to cart" i18nKey="productDetail.addToCart" />
-          </button>
         </div>
       );
     }
