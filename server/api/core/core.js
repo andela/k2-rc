@@ -66,7 +66,7 @@ export default {
     const registeredPackage = (this.Packages[packageInfo.name] = packageInfo);
     return registeredPackage;
   },
-  defaultCustomerRoles: ["guest", "account/profile", "product", "tag", "index", "cart/checkout", "cart/completed", "staticPageView"],
+  defaultCustomerRoles: ["guest", "account/profile", "product", "tag", "index", "cart/checkout", "cart/completed", "staticPageView", "wallet", "account/wallet"],
   defaultVisitorRoles: ["anonymous", "guest", "product", "tag", "index", "cart/checkout", "cart/completed", "staticPageView"],
   createGroups,
   /**
@@ -765,8 +765,8 @@ export default {
               entry.provides = [entry.provides];
               Logger.warn(
                 `Plugin ${combinedSettings.name} is using a deprecated version of the provides property for` +
-                  ` the ${entry.name || entry.route} registry entry. Since v1.5.0 registry provides accepts` +
-                  " an array of strings."
+                ` the ${entry.name || entry.route} registry entry. Since v1.5.0 registry provides accepts` +
+                " an array of strings."
               );
             }
             return entry;
