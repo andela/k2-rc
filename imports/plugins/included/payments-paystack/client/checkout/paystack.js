@@ -1,4 +1,3 @@
-
 /* eslint camelcase: 0 */
 import { Meteor } from "meteor/meteor";
 import { Template } from "meteor/templating";
@@ -7,6 +6,8 @@ import { Random } from "meteor/random";
 import { $ } from "meteor/jquery";
 import { Cart } from "/lib/collections";
 import { Paystack } from "../../lib/api";
+import { Packages } from "/lib/collections";
+import { Reaction } from "/client/api";
 import { PaystackPayment } from "../../lib/collections/schemas";
 
 import "./paystack.html";
@@ -48,6 +49,10 @@ AutoForm.addHooks("paystack-payment-form", {
           publicKey,
           secretKey
         } = keys;
+        const packageData = Packages.findOne({
+          name: "paystack-paymentmethod",
+          shopId: Reaction.getShopId()
+        });
         const cart = Cart.findOne();
         const amount = Math.round(cart.cartTotal()) * 100;
         const template = this.template;
@@ -67,8 +72,10 @@ AutoForm.addHooks("paystack-payment-form", {
                   const transaction = res.data;
                   const paymentMethod = {
                     processor: "Paystack",
+                    paymentPackageId: packageData._id,
+                    paymentSettingsKey: packageData.registry[0].settingsKey,
                     storedCard: transaction.authorization.card_type,
-                    method: "Paystack Payment",
+                    method: "credit",
                     transactionId: transaction.reference,
                     currency: transaction.currency,
                     amount: transaction.amount / 100,
