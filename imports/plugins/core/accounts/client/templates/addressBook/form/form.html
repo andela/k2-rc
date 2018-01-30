@@ -17,16 +17,22 @@
       {{/if}}
   </div>
 </div>
+<div>
+  <div class="alert alert-danger">
+      <div style="font-weight:bold">Warning</div>
+      Make sure to provide a correct and valid delivery address, so you can successfully get your product
+  </div>
+</div>
 <div class="row">
   <div class="col-md-6 form-group{{#if afFieldIsInvalid name='address1'}} has-error{{/if}}">
-      <label class="control-label">{{afFieldLabelText name='address1'}}</label>
+      <label class="control-label">Primary {{afFieldLabelText name='address1'}}</label>
       {{>afFieldInput name="address1"}}
       {{#if afFieldIsInvalid name="address1"}}
       <span class="help-block">{{afFieldMessage name="address1"}}</span>
       {{/if}}
   </div>
   <div class="col-md-6 form-group{{#if afFieldIsInvalid name='address2'}} has-error{{/if}}">
-      <label class="control-label">{{afFieldLabelText name='address2'}}</label>
+      <label class="control-label">Alternative {{afFieldLabelText name='address2'}}</label>
       {{>afFieldInput name="address2"}}
       {{#if afFieldIsInvalid name="address2"}}
       <span class="help-block">{{afFieldMessage name="address2"}}</span>

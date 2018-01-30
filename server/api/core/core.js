@@ -67,8 +67,18 @@ export default {
     return registeredPackage;
   },
   defaultCustomerRoles: [
-    "guest", "account/profile", "product", "tag", "index", "cart/checkout", "cart/completed", "staticPageView", "wallet", "account/wallet"],
-  defaultVisitorRoles: ["anonymous", "guest", "product", "tag", "index", "cart/checkout", "cart/completed", "staticPageView", "category"],
+    "guest", "account/profile", "product",
+    "tag", "index", "cart/checkout", "cart/completed",
+    "staticPageView", "wallet", "account/wallet",
+    "page/contact", "page/about", "page/support",
+    "category"
+  ],
+  defaultVisitorRoles: [
+    "anonymous", "guest", "product", "tag",
+    "index", "cart/checkout", "cart/completed",
+    "staticPageView", "category",
+    "page/contact", "page/about", "page/support"
+  ],
   createGroups,
   /**
    * canInviteToGroup
