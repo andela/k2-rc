@@ -20,7 +20,8 @@ const wrapComponent = (Comp) => (
         collection: "products",
         value: localStorage.getItem("searchValue") || "",
         renderChild: true,
-        facets: []
+        facets: [],
+        filter: ""
       };
     }
 
@@ -51,6 +52,20 @@ const wrapComponent = (Comp) => (
       this.setState({ value: "" });
     }
 
+    handleFilterChange = (event) => {
+      this.setState({
+        filter: {
+          value: event.target.value,
+          name: event.target.name
+        }
+      });
+    }
+
+    handleFilterClick = () => {
+      const element = document.getElementById("filterSearch");
+      element.classList.toggle("show");
+    }
+
     handleAccountClick = (event) => {
       Reaction.Router.go("account/profile", {}, { userId: event._id });
       this.handleChildUnmount();
@@ -70,7 +85,7 @@ const wrapComponent = (Comp) => (
       this.setState({ collection });
     }
 
-    handleChildUnmount = () =>  {
+    handleChildUnmount = () => {
       this.setState({ renderChild: false });
     }
 
@@ -82,6 +97,8 @@ const wrapComponent = (Comp) => (
               <Comp
                 handleChange={this.handleChange}
                 handleClick={this.handleClick}
+                handleFilterChange={this.handleFilterChange}
+                handleFilterClick={this.handleFilterClick}
                 handleToggle={this.handleToggle}
                 handleAccountClick={this.handleAccountClick}
                 handleTagClick={this.handleTagClick}
@@ -89,6 +106,7 @@ const wrapComponent = (Comp) => (
                 unmountMe={this.handleChildUnmount}
                 searchCollection={this.state.collection}
                 facets={this.state.facets}
+                filter={this.state.filter}
               />
             </div> : null
           }
@@ -98,6 +116,6 @@ const wrapComponent = (Comp) => (
   }
 );
 
-registerComponent("SearchSubscription", SearchSubscription, [ wrapComponent ]);
+registerComponent("SearchSubscription", SearchSubscription, [wrapComponent]);
 
 export default compose(wrapComponent)(SearchSubscription);
