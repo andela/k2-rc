@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import startIntro from "../../../../included/tour/tour";
 import { Components } from "@reactioncommerce/reaction-components";
 import { Meteor } from "meteor/meteor";
 
@@ -27,8 +28,18 @@ class NavBar extends Component {
     shop: PropTypes.object
   }
 
+  constructor(props) {
+    super(props);
+    this.startIntroBtn = this.startIntroBtn.bind(this);
+  }
+
   state = {
     navBarVisible: false
+  }
+
+  startIntroBtn(event) {
+    event.preventDefault();
+    startIntro.startManualTour();
   }
 
   toggleNavbarVisibility = () => {
@@ -113,6 +124,14 @@ class NavBar extends Component {
     );
   }
 
+  renderTourButton() {
+    return (
+      <div className="tourBtn">
+        <a href="#" onClick={this.startIntroBtn}>Take a Tour</a>
+      </div>
+    );
+  }
+
   renderHamburgerButton() {
     return (
       <div className="showmenu"><Components.Button icon="bars" onClick={this.toggleNavbarVisibility} /></div>
@@ -138,6 +157,7 @@ class NavBar extends Component {
         {this.renderHamburgerButton()}
         {this.renderBrand()}
         {this.renderTagNav()}
+        {this.renderTourButton()}
         {this.renderSearchButton()}
         {this.renderNotificationIcon()}
         {this.renderLanguage()}

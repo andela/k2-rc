@@ -1,5 +1,5 @@
 import { Meteor } from "meteor/meteor";
-import { check } from "meteor/check";
+import { check, Match } from "meteor/check";
 import { Reaction } from "/lib/api";
 import { Shops } from "/lib/collections";
 import { SHOP_WORKFLOW_STATUS_ACTIVE, SHOP_WORKFLOW_STATUS_DISABLED } from "../lib/constants";
@@ -9,10 +9,11 @@ const status = [
   SHOP_WORKFLOW_STATUS_DISABLED
 ];
 
-export function marketplaceUpdateShopWorkflow(shopId, workflowStatus, email) {
+export function marketplaceUpdateShopWorkflow(shopId, workflowStatus, email, shopName) {
   check(shopId, String);
   check(workflowStatus, String);
   check(email, String);
+  check(shopName, Match.Optional(String));
 
   if (shopId === Reaction.getPrimaryShopId()) {
     throw new Meteor.Error("access-denied", "Cannot change shop status");
@@ -25,7 +26,7 @@ export function marketplaceUpdateShopWorkflow(shopId, workflowStatus, email) {
   if (status.includes(workflowStatus)) {
     let message = "";
     if (`${workflowStatus}`.toLowerCase() === "active") {
-      message = `Your shop has been activated.
+      message = `Your new shop has been activated.
         <br>You can now login on reaction commerce to manage your shop.`;
     } else {
       message = `Your shop has been deactivated.
@@ -35,7 +36,7 @@ export function marketplaceUpdateShopWorkflow(shopId, workflowStatus, email) {
       to: email,
       from: "abdulfataiaka@gmail.com",
       subject: "Reaction commerce",
-      html: `<h2>Vendor shop status</h2>${message}`
+      html: `<h2>Vendor shop status</h2><h3>Shop name : ${shopName}</h3>${message}`
     });
     return Shops.update({
       _id: shopId

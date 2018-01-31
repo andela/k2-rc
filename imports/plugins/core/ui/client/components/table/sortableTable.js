@@ -288,7 +288,7 @@ class SortableTable extends Component {
           previousText={otherProps.previousText}
           nextText={otherProps.nextText}
           loadingText={otherProps.loadingText}
-          noDataText={() => <span className="sortableTable-noDataText">{this.props.noDataMessage}</span>}
+          noDataText={<span className="sortableTable-noDataText">{this.props.noDataMessage}</span>}
           pageText={otherProps.pageText}
           ofText={otherProps.ofText}
           rowsText={otherProps.rowsText}

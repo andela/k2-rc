@@ -24,18 +24,18 @@ class MarketplaceShopTableCell extends Component {
   }
 
   handleWorkflowChange = (event, value) => {
+    const { data } = this.props;
     const email = this.props.data.original.emails[0].address;
     if (this.props.onWorkflowChange) {
       // Get the shop id from the original document
       const { _id } = this.shop;
 
-      this.props.onWorkflowChange(_id, value, email);
+      this.props.onWorkflowChange(_id, value, email, data.row.name);
     }
   }
 
   render() {
     const { field, data } = this.props;
-
     if (field === "emails" && Array.isArray(data.value) && data.value.length) {
       return (
         <div className="table-cell body">
