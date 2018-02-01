@@ -108,7 +108,7 @@ function removeShippingAddresses(cart) {
  * @file Methods for Cart - Use these methods by running `Meteor.call()`
  * @example Meteor.call("cart/createCart", this.userId, sessionId)
  * @namespace Methods/Cart
-*/
+ */
 
 Meteor.methods({
   /**
@@ -175,7 +175,7 @@ Meteor.methods({
         // up completely, just to `coreCheckoutShipping` stage. Also, we will
         // need to recalculate shipping rates
         if (typeof currentCart.workflow === "object" &&
-        typeof currentCart.workflow.workflow === "object") {
+          typeof currentCart.workflow.workflow === "object") {
           if (currentCart.workflow.workflow.length > 2) {
             Meteor.call("workflow/revertCartWorkflow", "coreCheckoutShipping");
             // refresh shipping quotes
@@ -281,7 +281,7 @@ Meteor.methods({
       sessionId: sessionId,
       userId: userId
     });
-    Logger.debug("create cart: into new user cart. created: " +  currentCartId +
+    Logger.debug("create cart: into new user cart. created: " + currentCartId +
       " for user " + userId);
 
     // merge session carts into the current cart
@@ -347,7 +347,7 @@ Meteor.methods({
 
     const cart = Collections.Cart.findOne({ userId: this.userId });
     if (!cart) {
-      Logger.error(`Cart not found for user: ${ this.userId }`);
+      Logger.error(`Cart not found for user: ${this.userId}`);
       throw new Meteor.Error(404, "Cart not found",
         "Cart not found for user with such id");
     }
@@ -357,10 +357,14 @@ Meteor.methods({
     // `quantityProcessing`?
     let product;
     let variant;
-    Collections.Products.find({ _id: { $in: [
-      productId,
-      variantId
-    ] } }).forEach(doc => {
+    Collections.Products.find({
+      _id: {
+        $in: [
+          productId,
+          variantId
+        ]
+      }
+    }).forEach(doc => {
       if (doc.type === "simple") {
         product = doc;
       } else {
@@ -370,15 +374,13 @@ Meteor.methods({
 
     // TODO: this lines still needed. We could uncomment them in future if
     // decide to not completely remove product data from this method
-    // const product = Collections.Products.findOne(productId);
-    // const variant = Collections.Products.findOne(variantId);
     if (!product) {
-      Logger.warn(`Product: ${ productId } was not found in database`);
+      Logger.warn(`Product: ${productId} was not found in database`);
       throw new Meteor.Error(404, "Product not found",
         "Product with such id was not found!");
     }
     if (!variant) {
-      Logger.warn(`Product variant: ${ variantId } was not found in database`);
+      Logger.warn(`Product variant: ${variantId} was not found in database`);
       throw new Meteor.Error(404, "ProductVariant not found",
         "ProductVariant with such id was not found!");
     }
@@ -459,6 +461,8 @@ Meteor.methods({
           metafields: options.metafields,
           title: product.title,
           type: product.type,
+          productType: product.productType,
+          productFileUrl: product.productFileUrl,
           parcel
         }
       }
@@ -592,9 +596,10 @@ Meteor.methods({
     const cart = Collections.Cart.findOne({
       _id: cartId,
       userId: Meteor.userId()
+
     });
     if (!cart) {
-      Logger.error(`Cart not found for user: ${ this.userId }`);
+      Logger.error(`Cart not found for user: ${this.userId}`);
       throw new Meteor.Error(404, "Cart not found",
         "Cart not found for user with such id");
     }
@@ -661,7 +666,7 @@ Meteor.methods({
       _id: cartId
     });
     if (!cart) {
-      Logger.error(`Cart not found for user: ${ this.userId }`);
+      Logger.error(`Cart not found for user: ${this.userId}`);
       throw new Meteor.Error("Cart not found for user with such id");
     }
 
@@ -748,7 +753,7 @@ Meteor.methods({
       userId: this.userId
     });
     if (!cart) {
-      Logger.error(`Cart not found for user: ${ this.userId }`);
+      Logger.error(`Cart not found for user: ${this.userId}`);
       throw new Meteor.Error(404, "Cart not found",
         "Cart not found for user with such id");
     }
@@ -894,7 +899,7 @@ Meteor.methods({
     });
 
     if (!cart) {
-      Logger.error(`Cart not found for user: ${ this.userId }`);
+      Logger.error(`Cart not found for user: ${this.userId}`);
       throw new Meteor.Error(404, "Cart not found",
         "Cart not found for user with such id");
     }

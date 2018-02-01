@@ -30,7 +30,6 @@ export function copyCartToOrder(cartId) {
 
   // Init new order object from existing cart
   const order = Object.assign({}, cart);
-
   // get sessionId from cart while cart is fresh
   const sessionId = cart.sessionId;
 
@@ -95,7 +94,7 @@ export function copyCartToOrder(cartId) {
         shippingRecord.items.packed = false;
         shippingRecord.items.shipped = false;
         shippingRecord.items.delivered = false;
-        shippingRecord.workflow = { status: "new",  workflow: ["coreOrderWorkflow/notStarted"] };
+        shippingRecord.workflow = { status: "new", workflow: ["coreOrderWorkflow/notStarted"] };
         shippingRecords.push(shippingRecord);
       });
       order.shipping = shippingRecords;
@@ -128,11 +127,11 @@ export function copyCartToOrder(cartId) {
   if (!order.billing[0].currency) {
     order.billing[0].currency = {
       // userCurrency is shopCurrency unless user has selected a different currency than the shop
-      userCurrency: userCurrency
+      userCurrency
     };
   }
 
-  order.items = order.items.map(item => {
+  order.items = order.items.map((item) => {
     item.shippingMethod = order.shipping[order.shipping.length - 1];
     item.workflow = {
       status: "new",
@@ -144,7 +143,7 @@ export function copyCartToOrder(cartId) {
 
   // Assign items to each shipping record based on the shopId of the item
   _.each(order.items, (item) => {
-    const shippingRecord = order.shipping.find((sRecord) => sRecord.shopId === item.shopId);
+    const shippingRecord = order.shipping.find(sRecord => sRecord.shopId === item.shopId);
     // If the shipment exists
     if (shippingRecord.items) {
       shippingRecord.items.push({
@@ -199,7 +198,7 @@ export function copyCartToOrder(cartId) {
       }
     }
 
-    Logger.info("Transitioned cart " + cartId + " to order " + orderId);
+    Logger.info(`Transitioned cart ${  cartId  } to order ${  orderId}`);
     // catch send notification, we don't want
     // to block because of notification errors
 

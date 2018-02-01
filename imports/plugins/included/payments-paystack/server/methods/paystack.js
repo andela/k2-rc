@@ -83,10 +83,14 @@ Meteor.methods({
       name: "paystack-paymentmethod",
       shopId: Reaction.getShopId()
     });
-    const { publicKey, secretKey } = packageData.settings["paystack-paymentmethod"];
-    return {
+    const {
       publicKey,
       secretKey
+    } = packageData.settings["paystack-paymentmethod"];
+    return {
+      publicKey,
+      secretKey,
+      id: packageData._id
     };
   },
 
