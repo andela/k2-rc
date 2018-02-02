@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import startIntro from "../../../../included/tour/tour";
 import { Components } from "@reactioncommerce/reaction-components";
 import { Meteor } from "meteor/meteor";
 
@@ -25,24 +26,34 @@ class NavBar extends Component {
     hasProperPermission: PropTypes.bool,
     searchEnabled: PropTypes.bool,
     shop: PropTypes.object
+  };
+
+  constructor(props) {
+    super(props);
+    this.startIntroBtn = this.startIntroBtn.bind(this);
   }
 
   state = {
     navBarVisible: false
+  };
+
+  startIntroBtn(event) {
+    event.preventDefault();
+    startIntro.startManualTour();
   }
 
   toggleNavbarVisibility = () => {
     const isVisible = this.state.navBarVisible;
     this.setState({ navBarVisible: !isVisible });
-  }
+  };
 
   handleCloseNavbar = () => {
     this.setState({ navBarVisible: false });
-  }
+  };
 
   handleOpenSearchModal = () => {
     openSearchModalLegacy(this.props);
-  }
+  };
 
   renderLanguage() {
     return (
@@ -64,23 +75,14 @@ class NavBar extends Component {
     const shop = this.props.shop || { name: "" };
     const logo = this.props.brandMedia && this.props.brandMedia.url();
 
-    return (
-      <Components.Brand
-        logo={logo}
-        title={shop.name}
-      />
-    );
+    return <Components.Brand logo={logo} title={shop.name} />;
   }
 
   renderSearchButton() {
     if (this.props.searchEnabled) {
       return (
         <div className="search">
-          <Components.FlatButton
-            icon="fa fa-search"
-            kind="flat"
-            onClick={this.handleOpenSearchModal}
-          />
+          <Components.FlatButton icon="fa fa-search" kind="flat" onClick={this.handleOpenSearchModal} />
         </div>
       );
     }
@@ -88,9 +90,7 @@ class NavBar extends Component {
 
   renderNotificationIcon() {
     if (this.props.hasProperPermission) {
-      return (
-        <Components.Notification />
-      );
+      return <Components.Notification />;
     }
   }
 
@@ -108,24 +108,31 @@ class NavBar extends Component {
   }
 
   renderMainDropdown() {
+    return <Components.MainDropdown />;
+  }
+
+  renderTourButton() {
     return (
-      <Components.MainDropdown />
+      <div className="tourBtn">
+        <a href="#" onClick={this.startIntroBtn}>
+          Take a Tour
+        </a>
+      </div>
     );
   }
 
   renderHamburgerButton() {
     return (
-      <div className="showmenu"><Components.Button icon="bars" onClick={this.toggleNavbarVisibility} /></div>
+      <div className="showmenu">
+        <Components.Button icon="bars" onClick={this.toggleNavbarVisibility} />
+      </div>
     );
   }
 
   renderTagNav() {
     return (
       <div className="menu">
-        <Components.TagNav
-          isVisible={this.state.navBarVisible}
-          closeNavbar={this.handleCloseNavbar}
-        >
+        <Components.TagNav isVisible={this.state.navBarVisible} closeNavbar={this.handleCloseNavbar}>
           <Components.Brand />
         </Components.TagNav>
       </div>
@@ -144,6 +151,7 @@ class NavBar extends Component {
         {this.renderCurrency()}
         {this.renderMainDropdown()}
         {this.renderCartContainerAndPanel()}
+        {this.renderTourButton()}
       </div>
     );
   }
