@@ -111,16 +111,6 @@ class NavBar extends Component {
     return <Components.MainDropdown />;
   }
 
-  renderTourButton() {
-    return (
-      <div className="tourBtn">
-        <a href="#" onClick={this.startIntroBtn}>
-          Take a Tour
-        </a>
-      </div>
-    );
-  }
-
   renderHamburgerButton() {
     return (
       <div className="showmenu">
@@ -151,7 +141,6 @@ class NavBar extends Component {
         {this.renderCurrency()}
         {this.renderMainDropdown()}
         {this.renderCartContainerAndPanel()}
-        {this.renderTourButton()}
       </div>
     );
   }

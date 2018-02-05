@@ -5,6 +5,13 @@ const tour = [
           <div>I would like to take you on a quick tour of how to use this application</div>`
   },
   {
+    element: ".product-grid-list",
+    intro: `<h3>Products Gallery</h3>
+          <hr>
+          <div>This is the product gallery. Any product you upload to your store will be seen here.</div>`,
+    position: "top"
+  },
+  {
     element: ".cart-container",
     intro: `<h3> Shopping Cart </h3>
           <hr>
@@ -46,13 +53,6 @@ const tour = [
     intro: `<h3> Toolbar</h3>
           <hr>
           <div> You can carry out admin operations like adding, editing and viewing products from this section</div>`
-  },
-  {
-    element: ".product-grid",
-    intro: `<h3>Products Gallery</h3>
-          <hr>
-          <div>This is the product gallery. Any product you upload to your store will be seen here.</div>`,
-    position: "top"
   },
   {
     element: ".left",
