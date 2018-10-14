@@ -5,10 +5,12 @@ const tour = [
           <div>I would like to take you on a quick tour of how to use this application</div>`
   },
   {
-    element: ".product-grid",
+    element: ".product-grid-list",
     intro: `<h3>Products Gallery</h3>
           <hr>
-          <div> Here you can browse through our gallery of available products and add the products you'll like to purchase to your cart</div>`
+          <div> Here you can browse through our gallery of available products and
+           add the products you'll like to purchase to your cart</div>`,
+    position: "top"
   },
   {
     element: ".cart-container",
